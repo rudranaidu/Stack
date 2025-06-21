@@ -1,0 +1,69 @@
+Create an empty stack.
+
+Scan the symbols of the expression from left to right.
+
+If the symbol is a left bracket, push it onto the stack.
+
+If the symbol is a right bracket, do the following:
+
+a. If the stack is empty:
+ Print "Invalid expression: Right brackets are more than the left brackets."
+
+b. Else:
+
+Pop an element from the stack.
+
+If the popped bracket does not match the current right bracket:
+→ Print "Invalid expression: Mismatched brackets."
+
+import java.util.*;
+
+public class BracketValidator {
+
+    public static boolean isValid(String expression) {
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> bracketPairs = Map.of(
+            ')', '(', 
+            '}', '{', 
+            ']', '['
+        );
+
+        for (char ch : expression.toCharArray()) {
+            if (bracketPairs.containsValue(ch)) {
+                // Left bracket → push
+                stack.push(ch);
+            } else if (bracketPairs.containsKey(ch)) {
+                // Right bracket
+                if (stack.isEmpty()) {
+                    System.out.println("Invalid expression: Right brackets are more than the left brackets.");
+                    return false;
+                }
+                char top = stack.pop();
+                if (top != bracketPairs.get(ch)) {
+                    System.out.println("Invalid expression: Mismatched brackets.");
+                    return false;
+                }
+            }
+        }
+
+        if (!stack.isEmpty()) {
+            System.out.println("Invalid expression: Left brackets are more than the right brackets.");
+            return false;
+        }
+
+        System.out.println("Valid expression.");
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String expr1 = "{[()]}";    // Valid
+        String expr2 = "{[(])}";    // Mismatched
+        String expr3 = "{[()]";     // Left extra
+        String expr4 = "([)]";      // Wrong order
+
+        isValid(expr1);  // ✅
+        isValid(expr2);  // ❌
+        isValid(expr3);  // ❌
+        isValid(expr4);  // ❌
+    }
+}
