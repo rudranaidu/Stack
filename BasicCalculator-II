@@ -1,0 +1,100 @@
+Problem Statement (LC 227 - Basic Calculator II)
+
+Given a string s representing a valid mathematical expression, evaluate it.
+The expression contains:
+  non-negative integers
+  operators: +, -, *, /
+  spaces may appear (ignore them)
+
+⚠️ Assumptions:
+  No parentheses in this version (LC 227).
+  Division should truncate toward zero.
+  Input is always valid.
+
+Example:
+  Input: "3+2*2"
+  Output: 7
+  Explanation: 3 + (2*2) = 7
+
+Solution:
+
+ When we see an operator or reach the end of the string:
+
+  If the previous operator was + → push number to stack.
+  If - → push -number to stack.
+  If * → pop last number, multiply, push result.
+  If / → pop last number, divide, push result.
+
+Final result:
+Sum everything in the stack.
+
+Step-by-Step Example
+
+ s = "3+2*2"
+ Start: stack = [], num = 0, sign = +.
+'3' → num = 3.
+'+' → last sign was + → push 3 → stack = [3], reset num=0, sign=+.
+'2' → num = 2.
+'*' → last sign was + → push 2 → stack = [3,2], reset num=0, sign=*.
+'2' → num = 2.
+
+End of string → last sign was * → pop 2, compute 2*2=4, push → stack = [3,4].
+Final result = sum(stack) = 7
+
+
+Algorithm
+
+Initialize:
+  stack = []
+  num = 0
+  sign = '+'
+
+Loop through string s char by char:
+  If digit → build number: num = num*10 + (c - '0').
+  If operator (or last char):
+  If sign == '+' → push num.
+  If sign == '-' → push -num.
+  If sign == '*' → stack.push(stack.pop() * num).
+
+If sign == '/' → stack.push(stack.pop() / num) (truncate toward zero).
+  Reset num=0, update sign=c.
+  At the end → result = sum(stack).
+
+
+
+class Solution {
+    public int calculate(String s) {
+        if (s == null || s.length() == 0) return 0;
+
+        Stack<Integer> stack = new Stack<>();
+        int num = 0;
+        char sign = '+';
+        
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (Character.isDigit(c)) {
+                num = num * 10 + (c - '0');
+            }
+            
+            if ((!Character.isDigit(c) && c != ' ') || i == s.length() - 1) {
+                if (sign == '+') {
+                    stack.push(num);
+                } else if (sign == '-') {
+                    stack.push(-num);
+                } else if (sign == '*') {
+                    stack.push(stack.pop() * num);
+                } else if (sign == '/') {
+                    stack.push(stack.pop() / num);
+                }
+                sign = c;
+                num = 0;
+            }
+        }
+        
+        int result = 0;
+        for (int val : stack) result += val;
+        return result;
+    }
+}
+
