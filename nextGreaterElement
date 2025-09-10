@@ -1,0 +1,26 @@
+List<Integer> nextGreaterElement(int[] arr) {
+    if (arr == null || arr.length == 0) {
+        throw new IllegalArgumentException("Please provide valid input");
+    }
+
+    int len = arr.length;
+    Stack<Integer> stack = new Stack<>();
+    List<Integer> result = new ArrayList<>(Collections.nCopies(len, -1));
+
+    for (int i = len - 1; i >= 0; i--) {
+        // Pop all smaller or equal elements
+        while (!stack.isEmpty() && stack.peek() <= arr[i]) {
+            stack.pop();
+        }
+
+        // If stack not empty, top is the next greater
+        if (!stack.isEmpty()) {
+            result.set(i, stack.peek());
+        }
+
+        // Push current element
+        stack.push(arr[i]);
+    }
+
+    return result;
+}
