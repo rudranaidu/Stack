@@ -1,3 +1,7 @@
+Given an array of integers, for each element in the array find the Next Greater Element (NGE) to its right.
+The Next Greater Element for an element x is the first element to the right of x in the array that is strictly greater than x.
+If no such element exists, record -1.
+
 List<Integer> nextGreaterElement(int[] arr) {
     if (arr == null || arr.length == 0) {
         throw new IllegalArgumentException("Please provide valid input");
@@ -24,3 +28,14 @@ List<Integer> nextGreaterElement(int[] arr) {
 
     return result;
 }
+
+✅ Example Dry Run
+
+Input: [4, 5, 2, 25]
+Start from right → left
+i=3 (25): stack empty → result[3]=-1, push 25
+i=2 (2): stack top=25 > 2 → result[2]=25, push 2
+i=1 (5): pop 2, stack top=25 > 5 → result[1]=25, push 5
+i=0 (4): stack top=5 > 4 → result[0]=5, push 4
+
+Output: [5, 25, 25, -1] ✅
